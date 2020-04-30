@@ -1,7 +1,8 @@
 import bcrypt as bcrypt
 
 from config import db
-
+from dao.request import Request
+from dao.donation import Donation
 
 class User(db.Model):
 
@@ -16,6 +17,7 @@ class User(db.Model):
     zipCode = db.Column(db.String(10), nullable=False)
     country = db.Column(db.String(20), nullable=False)
     requests = db.relationship('Request', backref='user', lazy=True)
+    donations = db.relationship('Donation', backref='user', lazy=True)
     username = db.Column(db.String(12), nullable=False)
     password = db.Column(db.String(100), nullable=False)
 

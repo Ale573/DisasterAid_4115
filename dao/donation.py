@@ -9,3 +9,4 @@ class Donation(db.Model):
     quantity = db.Column(db.Integer, default=1)
     createdAt = db.Column(db.DateTime, default=datetime.datetime.utcnow())
     unit = db.Column(db.String(30), nullable=False)
+    uid = db.Column(db.Integer, db.ForeignKey('user.uid'), nullable=False)
