@@ -4,6 +4,7 @@ from config import db
 from dao.request import Request
 from dao.donation import Donation
 
+
 class User(db.Model):
 
     uid = db.Column(db.Integer, primary_key=True)
@@ -18,16 +19,17 @@ class User(db.Model):
     country = db.Column(db.String(20), nullable=False)
     requests = db.relationship('Request', backref='user', lazy=True)
     donations = db.relationship('Donation', backref='user', lazy=True)
-    username = db.Column(db.String(12), nullable=False)
+    username = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
     # user = id, firstname, lastname, email, phone, date_birth, address, city, zipcode, country
 
     def getAllUsers(self):
         return self.query.all()
-    
-    def getUserById(self, user_id):
-        return self.query.filter_by(uid=user_id)
+
+    @staticmethod
+    def getUserById(user_id):
+        return User.query.filter_by(uid=user_id)
 
     def create(self):
         self.password = bcrypt.hashpw(self.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -35,8 +37,17 @@ class User(db.Model):
         db.session.commit()
         return self
 
-    def update(self, uid, ufirstname, ulastname, uemail, uphone, udate_birth, uaddress, ucity, uzipcode, ucountry):
-        return uid
+    def update(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
 
-    def delete(self, uid):
-        return uid
+    def update_password(self, new_password):
+        self.password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
