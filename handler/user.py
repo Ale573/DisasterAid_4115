@@ -1,5 +1,6 @@
 from flask import jsonify
-from dao.user import UserDAO
+from dao.user import User
+
 
 class UserHandler: 
 
@@ -32,7 +33,7 @@ class UserHandler:
         return result 
 
     def getAllUsers(self):
-        dao = UserDAO()
+        dao = User()
         result = dao.getAllUsers()
         result_list = []
         for row in result:
@@ -41,7 +42,7 @@ class UserHandler:
         return jsonify(Users = result_list)
 
     def getUserById(self, uid):
-        dao = UserDAO()
+        dao = User()
         row = dao.getUserById(uid)
         if not row:
             return jsonify(Error = "User Not Found"), 404
@@ -61,13 +62,13 @@ class UserHandler:
         ucountry = json['ucountry']
 
         if ufirstname and ulastname and uemail and uphone and udate_birth and uaddress and ucity and uzipcode and ucountry:
-            dao = UserDAO()
+            dao = User()
             uid = dao.insert(ufirstname, ulastname, uemail, uphone, udate_birth, uaddress, ucity, uzipcode, ucountry)
             result = self.build_user_attributes(uid, ufirstname, ulastname, uemail, uphone, udate_birth, uaddress, ucity, uzipcode, ucountry)
             return jsonify(User = result), 201
 
     def updateUser(self, uid, json):
-        dao = UserDAO()
+        dao = User()
         if not dao.getUserById(uid):
             return jsonify(Error = "User not found."), 404
         else:
@@ -82,7 +83,7 @@ class UserHandler:
             ucountry = json['ucountry']
 
             if ufirstname and ulastname and uemail and uphone and udate_birth and uaddress and ucity and uzipcode and ucountry:
-                dao = UserDAO()
+                dao = User()
                 dao.update(uid, ufirstname, ulastname, uemail, uphone, udate_birth, uaddress, ucity, uzipcode, ucountry)
                 result = self.build_user_attributes(uid, ufirstname, ulastname, uemail, uphone, udate_birth, uaddress, ucity, uzipcode, ucountry)
                 return jsonify(User = result), 200
@@ -90,7 +91,7 @@ class UserHandler:
                 return jsonify(Error = "Unexpected attributes in update request"), 400
 
     def deleteUser(self, uid):
-        dao = UserDAO()
+        dao = User()
         if not dao.getUserById(uid):
             return jsonify(Error = "User not found."), 404
         else:
