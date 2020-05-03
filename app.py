@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
+from flask_sqlalchemy import SQLAlchemy
 
+from config import app
 from handler.user import UserHandler
 
-app = Flask(__name__)
-CORS(app)
+
+
 
 @app.route('/')
 def hello_world():
